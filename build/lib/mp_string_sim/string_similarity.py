@@ -13,6 +13,10 @@ def word_cloud(names, top=5, delimiters=[' ']):
       word_counts[word] += 1 
       total_words += 1
     top_words = Counter(word_counts).most_common(top)
+  response = {
+    "common_words": top_words,
+    "total_words": total_words
+  }
   return (top_words, total_words)
 
 def split(name, delimiters, maxsplit=0):
@@ -27,13 +31,24 @@ def similarity(names, limit = .6):
   similar_events = defaultdict(list)
   similar_event_count = 0
   jarowinkler = JaroWinkler()
+  counted = {}
   for event_name in names:
+    counted[event_name] = 1
     for compared_event in names:
-      if event_name == compared_event: 
+      if event_name == compared_event:
+        continue
+      if counted.get(compared_event, 0):
         continue
       if jarowinkler.similarity(event_name, compared_event) > limit:
+        similar_events[compared_event].append(event_name)
         similar_events[event_name].append(compared_event)
-        similar_event_count += 1
-  ##  Am I double counting events?
+        similar_event_count += 2
   similarity = similar_event_count  / len(names) ** 2
-  return (similar_events, similarity)
+  response = {
+    "similar_events" : similar_events,
+    "similarity_percentage" : similarity,
+    "similar_event_count": similar_event_count,
+    "total_event_count": len(names),
+    "similarity_threshold" : limit
+  }
+  return response 
