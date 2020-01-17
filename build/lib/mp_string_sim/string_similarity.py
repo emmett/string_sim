@@ -31,18 +31,18 @@ def similarity(names, limit = .6):
 
   similar_events = defaultdict(list)
   similar_event_count = 0
+  similarity = 0
   compared = {}
   if len(names):
     for event_name in names:
+      print(event_name)
       compared[event_name] = 1
 
-      compared = compare_words(event_name, names, compared)
-      similar_event_count += compared["similar_event_count"]
+      response = compare_words(event_name, names, compared, limit)
+      similar_event_count += response["similar_event_count"]
+      for event, similar in dict.items(response["similar_events"]):
+        similar_events[event] = similar 
     similarity = similar_event_count  / len(names) ** 2
-  else:
-    similar_events = []
-    similar_event_count = 0
-    similarity = 0
   response = {
     "similar_events" : similar_events,
     "similarity_percentage" : similarity,
@@ -52,20 +52,21 @@ def similarity(names, limit = .6):
   }
   return response 
 
-  def compare_words(word, words, compared):
-    similar_event_count = 0
-    similar_events = defaultdict(list)
-    for compared_word in words:
-      if word == compared_word:
-        continue
-      if compared.get(compared_word, 0):
-        continue
-      if jarowinkler.similarity(word, compared_word) > limit:
-        similar_events[compared_event].append(word)
-        similar_events[event_name].append(compared_word)
-        similar_event_count += 2
-      response = {
-        "similar_events" : similar_events,
-        "similar_event_count": similar_event_count,
-      }
-      return response 
+def compare_words(word, words, compared, limit):
+  jarowinkler = JaroWinkler()
+  similar_event_count = 0
+  similar_events = defaultdict(list)
+  for compared_word in words:
+    if word == compared_word:
+      continue
+    if compared.get(compared_word, 0):
+      continue
+    if jarowinkler.similarity(word, compared_word) > limit:
+      similar_events[compared_word].append(word)
+      similar_events[word].append(compared_word)
+      similar_event_count += 2
+  response = {
+    "similar_events" : similar_events,
+    "similar_event_count": similar_event_count,
+  }
+  return response 
