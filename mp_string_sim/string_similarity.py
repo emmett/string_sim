@@ -52,20 +52,20 @@ def similarity(names, limit = .6):
   }
   return response 
 
-  def compare_words(word, words, compared):
-    similar_event_count = 0
-    similar_events = defaultdict(list)
-    for compared_word in words:
-      if word == compared_word:
-        continue
-      if compared.get(compared_word, 0):
-        continue
-      if jarowinkler.similarity(word, compared_word) > limit:
-        similar_events[compared_event].append(word)
-        similar_events[event_name].append(compared_word)
-        similar_event_count += 2
-      response = {
-        "similar_events" : similar_events,
-        "similar_event_count": similar_event_count,
-      }
-      return response 
+def compare_words(word, words, compared):
+  similar_event_count = 0
+  similar_events = defaultdict(list)
+  for compared_word in words:
+    if word == compared_word:
+      continue
+    if compared.get(compared_word, 0):
+      continue
+    if jarowinkler.similarity(word, compared_word) > limit:
+      similar_events[compared_event].append(word)
+      similar_events[event_name].append(compared_word)
+      similar_event_count += 2
+    response = {
+      "similar_events" : similar_events,
+      "similar_event_count": similar_event_count,
+    }
+    return response 
