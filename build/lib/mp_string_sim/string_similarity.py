@@ -35,7 +35,6 @@ def similarity(names, limit = .6):
   compared = {}
   if len(names):
     for event_name in names:
-      print(event_name)
       compared[event_name] = 1
 
       response = compare_words(event_name, names, compared, limit)

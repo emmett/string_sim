@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 # This call to setup() does all the work
 setup(
     name="mp-string-similarity",
-    version="3.0.0",
+    version="3.0.1",
     description="MP string similarity check",
     license="MIT",
     classifiers=[
